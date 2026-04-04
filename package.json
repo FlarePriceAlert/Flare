@@ -1,0 +1,24 @@
+{
+  "name": "flare",
+  "version": "1.0.0",
+  "description": "Real-time price alert agent for Solana tokens. Set levels, get signals when they hit.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "build": "tsup",
+    "start": "bun run dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
