@@ -54,7 +54,7 @@ const TOOLS: Anthropic.Tool[] = [
 export async function runAgentLoop(config: Config, alerts: PriceAlert[]): Promise<void> {
   const client = new Anthropic({ apiKey: config.ANTHROPIC_API_KEY });
 
-  const prices = await fetchTokenPrices(config.BIRDEYE_API_KEY);
+  const prices = await fetchTokenPrices(config.COINGECKO_API_URL);
   const triggers = checkAlerts(alerts, prices);
 
   if (triggers.length > 0) {
@@ -100,7 +100,7 @@ export async function runAgentLoop(config: Config, alerts: PriceAlert[]): Promis
       let result: string;
 
       if (block.name === "fetch_prices") {
-        const fresh = await fetchTokenPrices(config.BIRDEYE_API_KEY);
+        const fresh = await fetchTokenPrices(config.COINGECKO_API_URL);
         prices.length = 0; prices.push(...fresh);
         result = JSON.stringify(fresh);
       } else if (block.name === "check_alerts") {

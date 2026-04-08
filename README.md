@@ -5,7 +5,7 @@
 **Real-time price alert agent for Solana tokens.**
 Set levels once. Get notified when they hit — with Claude's read on what it means and what to do about it.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/FlarePriceAlert/Flare/ci.yml?branch=main&style=flat-square&label=Build)](https://github.com/FlarePriceAlert/Flare/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/FlarePriceAlert/Flare/ci.yml?branch=master&style=flat-square&label=Build)](https://github.com/FlarePriceAlert/Flare/actions)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 [![Built with Claude Agent SDK](https://img.shields.io/badge/Built%20with-Claude%20Agent%20SDK-2dd4bf?style=flat-square)](https://docs.anthropic.com/en/docs/agents-and-tools/claude-agent-sdk)
 

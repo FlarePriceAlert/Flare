@@ -1,62 +1,59 @@
 import type { TokenPrice } from "../lib/types.js";
 import { logger } from "../lib/logger.js";
+import { loadConfig } from "../lib/config.js";
 
 const TRACKED_TOKENS = [
-  { symbol: "SOL",  mint: "So11111111111111111111111111111111111111112" },
-  { symbol: "JUP",  mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN" },
-  { symbol: "JTO",  mint: "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL" },
-  { symbol: "BONK", mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263" },
-  { symbol: "WIF",  mint: "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm" },
-  { symbol: "PYTH", mint: "HZ1JovNiVvGrGs4KXyWoZBgbVhDSPNJuxA4F4kqd12gB" },
+  { symbol: "SOL", mint: "So11111111111111111111111111111111111111112", coingeckoId: "solana" },
+  { symbol: "JUP", mint: "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN", coingeckoId: "jupiter-exchange-solana" },
+  { symbol: "JTO", mint: "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL", coingeckoId: "jito-governance-token" },
+  { symbol: "BONK", mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263", coingeckoId: "bonk" },
+  { symbol: "WIF", mint: "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm", coingeckoId: "dogwifcoin" },
+  { symbol: "PYTH", mint: "HZ1JovNiVvGrGs4KXyWoZBgbVhDSPNJuxA4F4kqd12gB", coingeckoId: "pyth-network" },
 ];
 
-interface BirdeyeResponse {
-  data: {
-    value: number;
-    updateUnixTime: number;
-  };
-  success: boolean;
+interface CoinGeckoMarket {
+  id: string;
+  current_price: number;
+  price_change_percentage_1h_in_currency?: number;
+  price_change_percentage_24h?: number;
+  total_volume?: number;
+  last_updated?: string;
 }
 
-export async function fetchTokenPrices(birdeyeApiKey: string): Promise<TokenPrice[]> {
-  const results: TokenPrice[] = [];
+export async function fetchTokenPrices(apiUrl = loadConfig().COINGECKO_API_URL): Promise<TokenPrice[]> {
+  try {
+    const ids = TRACKED_TOKENS.map((token) => token.coingeckoId).join(",");
+    const url =
+      `${apiUrl}/coins/markets` +
+      `?vs_currency=usd` +
+      `&ids=${ids}` +
+      `&price_change_percentage=1h,24h`;
 
-  for (const token of TRACKED_TOKENS) {
-    try {
-      const url = `https://public-api.birdeye.so/defi/price?address=${token.mint}`;
-      const res = await fetch(url, {
-        headers: birdeyeApiKey ? { "X-API-KEY": birdeyeApiKey } : {},
-      });
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!res.ok) {
+      logger.warn(`CoinGecko markets returned ${res.status}`);
+      return [];
+    }
 
-      if (!res.ok) {
-        results.push({
-          mint: token.mint,
-          symbol: token.symbol,
-          priceUsd: 0,
-          change1h: 0,
-          change24h: 0,
-          volume24h: 0,
-          updatedAt: Date.now(),
-        });
-        continue;
-      }
+    const data = await res.json() as CoinGeckoMarket[];
+    const byId = new Map(data.map((item) => [item.id, item]));
 
-      const data = (await res.json()) as BirdeyeResponse;
-      results.push({
+    return TRACKED_TOKENS.map((token) => {
+      const market = byId.get(token.coingeckoId);
+      return {
         mint: token.mint,
         symbol: token.symbol,
-        priceUsd: data.data?.value ?? 0,
-        change1h: 0,
-        change24h: 0,
-        volume24h: 0,
-        updatedAt: data.data?.updateUnixTime ? data.data.updateUnixTime * 1000 : Date.now(),
-      });
-    } catch (err) {
-      logger.debug(`Failed to fetch price for ${token.symbol}:`, err);
-    }
+        priceUsd: market?.current_price ?? 0,
+        change1h: market?.price_change_percentage_1h_in_currency ?? 0,
+        change24h: market?.price_change_percentage_24h ?? 0,
+        volume24h: market?.total_volume ?? 0,
+        updatedAt: market?.last_updated ? Date.parse(market.last_updated) : Date.now(),
+      };
+    });
+  } catch (err) {
+    logger.debug("Failed to fetch token prices:", err);
+    return [];
   }
-
-  return results;
 }
 
 export const TRACKED_TOKEN_LIST = TRACKED_TOKENS;

@@ -2,6 +2,15 @@
   "name": "flare",
   "version": "1.0.0",
   "description": "Real-time price alert agent for Solana tokens. Set levels, get signals when they hit.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlarePriceAlert/Flare.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FlarePriceAlert/Flare/issues"
+  },
+  "homepage": "https://github.com/FlarePriceAlert/Flare#readme",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {

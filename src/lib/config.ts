@@ -2,8 +2,7 @@ import { z } from "zod";
 
 const ConfigSchema = z.object({
   ANTHROPIC_API_KEY: z.string().min(1),
-  HELIUS_API_KEY: z.string().min(1),
-  BIRDEYE_API_KEY: z.string().default(""),
+  COINGECKO_API_URL: z.string().url().default("https://api.coingecko.com/api/v3"),
   CHECK_INTERVAL_MS: z.coerce.number().default(10_000),
   MAX_ALERTS: z.coerce.number().default(50),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
