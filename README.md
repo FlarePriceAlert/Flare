@@ -13,15 +13,37 @@ Flare does not just tell you that a level hit. It tells you whether the move loo
 
 ---
 
-Price alerts are easy to generate and hard to trust. Most bots fire when a number is crossed, then leave the operator to guess what actually happened. Flare is built for the missing step after the trigger.
+Most alert bots are barely better than an exchange notification. Price crosses a line, something pings, and the operator is left doing the actual work: deciding whether the move is building, failing, or not worth another second of attention.
 
-It watches tracked Solana names, evaluates whether an alert fired because of a real breakout, a sharp unwind, or a low-quality volatility burst, and prints the alert with enough context to make the next action obvious. The output is designed for people who want fewer alerts, not more alerts.
+Flare is built for that missing layer. It watches tracked Solana names, classifies the move after a trigger fires, and turns a raw alert into a read on what kind of event just hit the tape.
 
-`WATCH -> DETECT -> CLASSIFY -> ANALYZE -> ALERT`
+`WATCH -> DETECT -> CLASSIFY -> EXPLAIN -> ESCALATE OR IGNORE`
 
 ---
 
-Alert Board - Triggered Alert View - At a Glance - Operating Surfaces - How It Works - Example Output - Alert Conditions - Risk Controls - Quick Start
+Alert Board • Triggered Alert View • Why Flare Matters • At a Glance • Signal Quality Ladder • Reading A Trigger • Operator Workflow • Example Output • Trigger Types • Risk Controls • Quick Start
+
+## Alert Board
+
+![Flare Alerts](assets/preview-alerts.svg)
+
+## Triggered Alert View
+
+![Flare Trigger](assets/preview-trigger.svg)
+
+## Why Flare Matters
+
+The market already has enough alerts. The problem is not alert scarcity. The problem is attention waste.
+
+A clean alert product should answer three questions immediately:
+
+1. did the level actually matter
+2. what kind of move caused it
+3. what should the operator do next
+
+Flare is designed around those questions. It is not trying to become a full trading system. It is trying to reduce the time between "something happened" and "I know whether this deserves action."
+
+That distinction matters most on Solana, where speed is high, noise is constant, and the first move is often the least informative part of the move.
 
 ## At a Glance
 
@@ -30,60 +52,72 @@ Alert Board - Triggered Alert View - At a Glance - Operating Surfaces - How It W
 - `Primary failure mode`: firing on raw threshold hits that do not deserve action
 - `Best for`: operators who want a trigger plus a read on what kind of move just happened
 
-## Price Monitor with Alert Zones
+## What Flare Actually Produces
 
-![Flare Alerts](assets/preview-alerts.svg)
+Flare is strongest when it gives the operator something they can act on without opening five more tabs.
 
-## Triggered Alert View
+- a clean trigger with price and distance-to-threshold
+- a classification such as continuation, unwind, squeeze, or low-quality noise
+- a short operator note explaining why the move matters
+- a signal severity that helps decide whether the alert should be watched, escalated, or ignored
 
-![Flare Trigger](assets/preview-trigger.svg)
+That output is more useful than a simple "price above X" because it reduces interpretation overhead at the moment attention is most expensive.
 
-## Operating Surfaces
+## Signal Quality Ladder
 
-- `Alert Board`: shows active levels, current distance to threshold, and whether the move is becoming actionable
-- `Triggered Alert View`: turns a threshold hit into an actual read with classification and next-step context
-- `Condition Engine`: evaluates alert logic such as cross-up, cross-down, percentage expansion, and volatility spike
-- `Analysis Loop`: asks the agent whether the trigger looks like signal, squeeze, unwind, or noise
+| State | What it usually means | Typical response |
+|-------|-----------------------|------------------|
+| `early watch` | price is near a level but nothing meaningful has happened yet | keep on screen, no escalation |
+| `triggered` | the level broke, but context is still mixed | inspect classification before acting |
+| `continuation candidate` | move cleared the level with enough support to matter | escalate to active watch |
+| `exhaustion or unwind` | the level hit during a sharp reactive move | treat as caution, not momentum |
+| `noise` | the threshold technically fired but the move is low quality | ignore and move on |
 
-## Why Flare Exists
+Flare should spend most of its time in the boring states. A board that makes everything look urgent stops being useful fast.
 
-The problem with most alert bots is not speed. The problem is interpretation. A user sets a level on BONK or JUP, the alert fires, and now they still have to answer the real question: did price hit that level because the move is building, because it already exhausted itself, or because the chart is just noisy?
+## Reading A Trigger
 
-Flare exists to make that distinction immediately. It is meant to sit between a dumb threshold bot and a human operator who wants context before acting. It narrows the number of alerts worth paying attention to and adds enough interpretation that the alert can function like a real decision surface.
+Flare is meant to be read top-down.
 
-## What A Good Flare Alert Looks Like
+Start with the condition that fired. Then check the short-horizon move, then the 24h backdrop, and only then read the classification note. That order matters because many alerts are technically true and still operationally worthless.
 
-A good alert is not simply "price above X." A good alert has a reason to exist.
+A good trigger review looks like this:
 
-- the move actually crossed a tracked threshold
-- the recent rate of change makes the trigger meaningful
-- volatility is strong enough to matter, but not so chaotic that the alert is junk
-- the analysis can describe the move in plain language instead of restating the threshold
+- did price really cross a level that traders care about
+- was the move expanding into the break or fading into it
+- does the volatility context support continuation or just reaction
+- does the classification add information, or merely restate the event
 
-Flare is strongest when it converts a mechanical trigger into an immediately readable situation report.
+If the answer to the last question is weak, the alert should be demoted.
 
-## How It Works
+## Operator Workflow
 
-Flare runs a short loop every cycle:
+Flare is built for the operator who wants to look at fewer alerts, not more alerts.
 
-1. fetch the latest market fields for tracked Solana tokens
-2. compare the current state to every active alert condition
-3. collect the triggers that actually fired during this cycle
-4. classify the triggered move using recent price change and volatility context
-5. send the alert through the analysis loop so the operator gets a narrative, not just a ping
+### 1. Build A Small Alert Book
 
-The important part is that the alert is evaluated after it fires, not just before. That is what turns it from an alarm into an actual monitoring product.
+The product works best when it is watching a deliberate list of Solana names and levels. Overloading the board with every token on the screen turns even good analysis into clutter.
 
-## How To Read The Board
+### 2. Let The Trigger Happen First
 
-Flare is meant to be read top-down:
+Flare is not predictive at the threshold level. It becomes useful the moment the market actually interacts with the price you cared about.
 
-1. start with whether a price level actually broke or failed
-2. look at the 1h and 24h context around the trigger
-3. use the classification to separate continuation from reactive noise
-4. decide whether the move deserves escalation, watching, or dismissal
+### 3. Use The Classification To Save Time
 
-That reading flow matters because many token alerts are technically true and still operationally useless.
+The point of the model layer is not to be dramatic. It is to stop you from burning attention on moves that look important only because they were loud.
+
+### 4. Escalate Only The Alerts With A Real Story
+
+The best Flare alerts describe a situation. They do not just report an event.
+
+## What Flare Intentionally Ignores
+
+- tiny percentage moves that technically trip a rule but have no market meaning
+- repetitive alerts around the same stale level
+- analysis that simply repeats the threshold without adding a read
+- hyper-noisy moves where classification confidence is too weak to be useful
+
+This selectivity is the product. If Flare starts forwarding everything, it loses its reason to exist.
 
 ## Example Output
 
@@ -96,28 +130,36 @@ threshold        $0.000031
 triggered price  $0.0000318
 distance         +2.6%
 classification   continuation candidate
+severity         elevated
 
 analysis: the move cleared the tracked level with expanding short-horizon momentum.
 watch for follow-through rather than fading the first print.
 ```
 
-## Alert Conditions
+## Trigger Types
 
-| Condition | What it means | Typical use |
-|-----------|---------------|-------------|
-| `price_above` | Price crossed a tracked level upward | breakout watch |
-| `price_below` | Price lost a tracked level downward | support failure or unwind |
-| `pct_change_up` | Short-horizon expansion exceeded a set percent | momentum burst |
-| `pct_change_down` | Short-horizon drop exceeded a set percent | liquidation or panic move |
-| `volatility_spike` | Recent move became abnormally large | event detection and noise control |
+| Condition | What it means | Best used for |
+|-----------|---------------|---------------|
+| `price_above` | price crossed a tracked level upward | breakout watch |
+| `price_below` | price lost a tracked level downward | support failure or unwind |
+| `pct_change_up` | short-horizon expansion exceeded a threshold | fast momentum bursts |
+| `pct_change_down` | short-horizon drop exceeded a threshold | liquidation or panic moves |
+| `volatility_spike` | recent move became abnormally large | event detection and noise control |
 
-## What Flare Intentionally Ignores
+The condition should define the trigger, but the classification should define the interpretation.
 
-- tiny percentage moves that technically trip a rule but have no market meaning
-- stale threshold alerts that would fire repeatedly without adding new information
-- empty analysis that just rephrases the trigger instead of interpreting it
+## Why The Board Feels More Useful Than A Normal Alert Bot
 
-The point of the product is to reduce attention waste, not maximize message count.
+Normal alert bots are binary. Something happened or it did not.
+
+Flare is useful because it behaves more like a triage layer:
+
+- it turns price events into state changes
+- it makes low-quality alerts easier to ignore
+- it gives the operator a first opinion without pretending to be a full trade plan
+- it helps a fast market feel legible again
+
+That is a much stronger fit for launch than a generic notification product because the value is obvious even to non-dev readers.
 
 ## Risk Controls
 
@@ -147,6 +189,13 @@ CHECK_INTERVAL_MS=10000
 MAX_ALERTS=50
 LOG_LEVEL=info
 ```
+
+## Support Docs
+
+- [Runbook](docs/runbook.md)
+- [Changelog](CHANGELOG.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security](SECURITY.md)
 
 ## License
 
