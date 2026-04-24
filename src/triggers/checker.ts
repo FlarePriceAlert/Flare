@@ -40,10 +40,19 @@ export function checkAlerts(
     }
 
     if (fired) {
-      const pctFromThreshold =
-        alert.condition === "price_above" || alert.condition === "price_below"
-          ? ((price.priceUsd - alert.threshold) / alert.threshold) * 100
-          : price.change24h - alert.threshold;
+      const pctFromThreshold = (() => {
+        switch (alert.condition) {
+          case "price_above":
+          case "price_below":
+            return ((price.priceUsd - alert.threshold) / alert.threshold) * 100;
+          case "pct_change_up":
+            return price.change24h - alert.threshold;
+          case "pct_change_down":
+            return Math.abs(price.change24h) - alert.threshold;
+          case "volatility_spike":
+            return Math.abs(price.change1h) - alert.threshold;
+        }
+      })();
 
       triggered.push({
         alertId: alert.id,

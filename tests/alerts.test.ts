@@ -36,6 +36,18 @@ describe("checkAlerts", () => {
     expect(triggers).toHaveLength(1);
   });
 
+  it("reports pct_change_down distance as threshold breach size", () => {
+    const alert = createAlert("SOL", SOL_MINT, "pct_change_down", 5);
+    const [trigger] = checkAlerts([alert], [makePrice({ change24h: -8 })]);
+    expect(trigger?.pctFromThreshold).toBe(3);
+  });
+
+  it("reports volatility distance from one-hour absolute move", () => {
+    const alert = createAlert("SOL", SOL_MINT, "volatility_spike", 4);
+    const [trigger] = checkAlerts([alert], [makePrice({ change1h: -6, change24h: 1 })]);
+    expect(trigger?.pctFromThreshold).toBe(2);
+  });
+
   it("does not trigger expired alerts", () => {
     const alert = createAlert("SOL", SOL_MINT, "price_above", 100, undefined, -1000);
     const triggers = checkAlerts([alert], [makePrice({ priceUsd: 180 })]);
