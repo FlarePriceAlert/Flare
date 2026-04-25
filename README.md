@@ -21,15 +21,7 @@ Flare is built for that missing layer. It watches tracked Solana names, classifi
 
 ---
 
-Alert Board • Triggered Alert View • Why Flare Matters • At a Glance • Signal Quality Ladder • Reading A Trigger • Operator Workflow • Example Output • Trigger Types • Risk Controls • Quick Start
-
-## Alert Board
-
-![Flare Alerts](assets/preview-alerts.svg)
-
-## Triggered Alert View
-
-![Flare Trigger](assets/preview-trigger.svg)
+Why Flare Matters • At a Glance • Signal Quality Ladder • Reading A Trigger • Operator Workflow • Example Output • Trigger Types • Risk Controls • Quick Start
 
 ## Why Flare Matters
 
