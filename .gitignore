@@ -73,3 +73,8 @@ profiles/
 *.orig
 *.rej
 *.bak
+
+# Trace captures
+traces/
+*.trace
+*.trace.json
