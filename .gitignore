@@ -68,3 +68,8 @@ $RECYCLE.BIN/
 # Local profiling output
 profiles/
 .profiles/
+
+# Patch backup artifacts
+*.orig
+*.rej
+*.bak
