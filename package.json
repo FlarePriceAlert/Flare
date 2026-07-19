@@ -1,7 +1,7 @@
 {
   "name": "flare",
   "version": "1.0.0",
-  "description": "Contextual Solana alert board for price breaks, liquidation risk, and whale-triggered moves.",
+  "description": "Context-aware alert board for Robinhood crypto price breaks, liquidation risk, and fast market moves.",
   "license": "MIT",
   "packageManager": "bun@1.2.15",
   "engines": {
@@ -9,7 +9,7 @@
     "bun": ">=1.2.0"
   },
   "keywords": [
-    "solana",
+    "robinhood",
     "alerts",
     "coingecko",
     "trading",
@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/FlarePriceAlert/Flare/issues"
   },
-  "homepage": "https://github.com/FlarePriceAlert/Flare#readme",
+  "homepage": "https://flare-launch.vercel.app/",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
