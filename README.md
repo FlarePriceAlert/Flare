@@ -2,10 +2,10 @@
 
 # Flare
 
-**Context-aware alert board for Robinhood crypto price moves.**
+**Context-aware alert board for Solana token price moves.**
 Flare does not just tell you that a level hit. It tells you whether the move looks like continuation, liquidation noise, or a move that should be ignored.
 
-[Website](https://flare-launch.vercel.app/)
+[Website](https://flaremoves.com/) · [Launch venue](https://pump.fun/)
 
 [![Build](https://img.shields.io/github/actions/workflow/status/FlarePriceAlert/Flare/ci.yml?branch=master&style=flat-square&label=Build)](https://github.com/FlarePriceAlert/Flare/actions)
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
@@ -17,7 +17,7 @@ Flare does not just tell you that a level hit. It tells you whether the move loo
 
 Most alert bots are barely better than an exchange notification. Price crosses a line, something pings, and the operator is left doing the actual work: deciding whether the move is building, failing, or not worth another second of attention.
 
-Flare is built for that missing layer. It watches tracked Robinhood crypto assets, classifies the move after a trigger fires, and turns a raw alert into a read on what kind of event just hit the tape.
+Flare is built for that missing layer. It watches tracked Solana tokens, classifies the move after a trigger fires, and turns a raw alert into a read on what kind of event just hit the tape.
 
 `WATCH -> DETECT -> CLASSIFY -> EXPLAIN -> ESCALATE OR IGNORE`
 
@@ -41,10 +41,12 @@ That distinction matters most in fast crypto markets, where noise is constant an
 
 ## At a Glance
 
-- `Use case`: interpreting Robinhood crypto price alerts instead of blindly forwarding them
+- `Use case`: interpreting Solana token price alerts instead of blindly forwarding them
 - `Primary input`: live asset price, 1h move, 24h move, and recent volatility behavior
 - `Primary failure mode`: firing on raw threshold hits that do not deserve action
 - `Best for`: operators who want a trigger plus a read on what kind of move just happened
+- `Tracked tokens`: SOL, JUP, JTO, BONK, WIF, and PYTH
+- `Launch venue`: Pump.fun
 
 ## What Flare Actually Produces
 
@@ -90,7 +92,7 @@ Flare is built for the operator who wants to look at fewer alerts, not more aler
 
 ### 1. Build A Small Alert Book
 
-The product works best when it is watching a deliberate list of Robinhood crypto assets and levels. Overloading the board with every asset on the screen turns even good analysis into clutter.
+The product works best when it is watching a deliberate list of Solana tokens and levels. Overloading the board with every asset on the screen turns even good analysis into clutter.
 
 ### 2. Let The Trigger Happen First
 
@@ -118,11 +120,11 @@ This selectivity is the product. If Flare starts forwarding everything, it loses
 ```text
 FLARE // TRIGGERED ALERT
 
-asset            BTC
+asset            SOL
 condition        price_above
-threshold        $91,000
-triggered price  $93,366
-distance         +2.6%
+threshold        $74.00
+triggered price  $74.37
+distance         +0.5%
 classification   continuation candidate
 severity         elevated
 
